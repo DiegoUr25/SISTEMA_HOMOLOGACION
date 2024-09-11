@@ -10,7 +10,7 @@ num_columnas = dfc.shape[1]
 print ("Tiene la siguiente cant de columnas : ", num_columnas) 
 
 #dfc.info()
-###TRANSFORMACION $$
+###TRANSFORMACION
 #VALIDACIÓN DE FORMATO DE COLUMNAS ADMITIDAS PARA EL PROCESO 
 
 
