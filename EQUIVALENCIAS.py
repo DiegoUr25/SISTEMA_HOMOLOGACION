@@ -16,8 +16,8 @@ print ("Tiene la siguiente cant de columnas : ", num_columnas)
 
 print(dfe.head(100)) 
 print(dfe.info())
-if num_columnas == 7 :
-     dfe= corregir_columnas_PRODUCTOS(dfe) 
+if num_columnas == 5 :
+     dfe= corregir_columnas_EQUIVALENCIAS(dfe) 
      print(dfe.head(98))
      print("Todo ok") 
 
@@ -54,7 +54,7 @@ if num_columnas == 7 :
 
      TESTINSTANCE = Equivalencias(None, None, None, None, None)
      TESTINSTANCE.Grabar(dfe)
-     print('CARGÓ CORRECTAMENTE PRODUCTOS A BD')
+     print('CARGÓ CORRECTAMENTE EQUIVALENCIAS A BD')
         
 else : 
          print("Faltan columnas , se detiene el proceso.") 

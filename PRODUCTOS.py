@@ -4,8 +4,8 @@ import ftfy as f
 from FUNCIONES import *
 
 filepath = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Productos.csv' 
-separador = detectar_separador(filepath) 
-dfp= pd.read_csv(filepath, delimiter = separador, encoding='unicode_escape',dtype='string') 
+# separador = detectar_separador(filepath) 
+dfp= pd.read_csv(filepath, delimiter = ';', encoding='unicode_escape') 
 num_columnas = dfp.shape[1]  
 print ("Tiene la siguiente cant de columnas : ", num_columnas) 
 

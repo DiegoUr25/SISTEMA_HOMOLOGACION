@@ -53,7 +53,7 @@ def corregir_columnas_DISTRIBUIDORAS(dfd):
     print('Se eliminó caracteres especiales')    
 
     indices_dfd = dfd.index
-    dfd_sin_duplicados = dfd.drop_duplicates(subset=['COD_DISTRIBUIDORA', 'COD_PRODUCTO'], keep='first')
+    dfd_sin_duplicados = dfd.drop_duplicates(subset=['COD_DISTRIBUIDORA'], keep='first')
     filas_eliminadas_pos =indices_dfd.difference(dfd_sin_duplicados.index)  
     cant_eliminados = len(filas_eliminadas_pos)
     if not filas_eliminadas_pos.empty : 
@@ -117,7 +117,7 @@ def corregir_columnas_VENDEDORES(dfv):
     # Muestra la información del DataFrame resultante
     #df.info()
     indices_dfv = dfv.index
-    dfv_sin_duplicados = dfv.drop_duplicates(subset=['COD_DISTRIBUIDORA', 'COD_PRODUCTO'], keep='first')
+    dfv_sin_duplicados = dfv.drop_duplicates(subset=['COD_DISTRIBUIDORA', 'COD_VENDEDOR'], keep='first')
     filas_eliminadas_pos =indices_dfv.difference(dfv_sin_duplicados.index)  
     cant_eliminados = len(filas_eliminadas_pos)
     if not filas_eliminadas_pos.empty : 
@@ -212,31 +212,21 @@ def corregir_columnas_PRODUCTOS(dfp):
         dfp = dfp.rename(columns={ant_nombre: new_nombre})
     print('Renombró correctamente las columnas')
 
-    # for col in df.select_dtypes(include=['object']).columns : 
-    #      df[col] = df[col].fillna('N/A')   
-    #      df[col] = df[col].str.replace(r'NULL', 'N/A', regex=True)    
-    # print('Se CORRIGIÓ NULOS') 
-
-    for col in dfp.select_dtypes(include=['string']).columns : 
+    for col in dfp.select_dtypes(include=['object']).columns: 
          dfp[col] = dfp[col].fillna('N/A')   
-         dfp[col] = dfp[col].str.replace(r'NULL', 'N/A', regex=True)    
-    print('Se CORRIGIÓ NULOS EN STRING') 
+         dfp[col] = dfp[col].astype('string')
+         dfp[col] = dfp[col].str.replace(r'NULL', 'N/A', regex=True) 
+    print('Se cambió a String y corrigió nulos') 
 
-    # for col in df.select_dtypes(include=['float64']).columns: 
-    #     df[col] = df[col].fillna(0.0)   
-    #     df[col] = df[col].astype('int64')
-    # print('Se cambió a Int') 
-
-    # for col in df.select_dtypes(include=['int64']).columns: 
-    #     df[col] = df[col].astype('string')
-    #     df[col] = df[col].str.replace(r'0', 'N/A', regex=True)  
-    # print('Se cambió a string')  
-
+    # for col in dfp.select_dtypes(include=['string']).columns : 
+    #      dfp[col] = dfp[col].fillna('N/A')   
+    #      dfp[col] = dfp[col].str.replace(r'NULL', 'N/A', regex=True)    
+    # print('Se CORRIGIÓ NULOS EN STRING') 
     for col in dfp.select_dtypes(include=['string']).columns: 
         dfp[col] = dfp[col].apply(ftfy.fix_text) 
     print('Corrigió decodificacion') 
 
-    for col in dfp.select_dtypes(include=['object']).columns : 
+    for col in dfp.select_dtypes(include=['string']).columns : 
         dfp[col] = dfp[col].str.replace(r'[!?-]', '', regex=True)    
     print('Se eliminó caracteres especiales')    
 
@@ -256,7 +246,7 @@ def corregir_columnas_PRODUCTOS(dfp):
 
 
 
-def corregir_columnas_EQUIVALENCIAS(dfcvent):    
+def corregir_columnas_EQUIVALENCIAS(dfe):    
     nuevos_nombres = {
         0: 'COD_DISTRIBUIDORA',
         1: 'COD_PROD_DISTRIBUIDOR',
@@ -300,7 +290,7 @@ def corregir_columnas_EQUIVALENCIAS(dfcvent):
     print('Se eliminó caracteres especiales')    
 
     indices_dfe = dfe.index
-    dfe_sin_duplicados = dfe.drop_duplicates(subset=['COD_DISTRIBUIDORA', 'COD_PRODUCTO'], keep='first')
+    dfe_sin_duplicados = dfe.drop_duplicates(subset=['COD_DISTRIBUIDORA', 'COD_PROD_DISTRIBUIDOR','COD_PROD_MAESTRO'], keep='first')
     filas_eliminadas_pos =indices_dfe.difference(dfe_sin_duplicados.index)  
     cant_eliminados = len(filas_eliminadas_pos)
     if not filas_eliminadas_pos.empty : 
@@ -368,7 +358,7 @@ def corregir_columnas_VENTAS(dfcvent):
     print('Se eliminó caracteres especiales')    
 
     indices_dfcvent = dfcvent.index
-    dfcvent_sin_duplicados = dfcvent.drop_duplicates(subset=['COD_DISTRIBUIDORA', 'COD_PRODUCTO'], keep='first')
+    dfcvent_sin_duplicados = dfcvent.drop_duplicates(subset=['COD_DISTRIBUIDORA', 'NUM_FACTURA','COD_CLIENTE','COD_ITEM','COD_PRODUCTO','COD_VENDEDOR'], keep='first')
     filas_eliminadas_pos =indices_dfcvent.difference(dfcvent_sin_duplicados.index)  
     cant_eliminados = len(filas_eliminadas_pos)
     if not filas_eliminadas_pos.empty : 
@@ -380,8 +370,79 @@ def corregir_columnas_VENTAS(dfcvent):
     dfcvent = dfcvent_sin_duplicados
     return dfcvent 
 
+
+
+
+def corregir_columnas_MAESTRO_GENERAL(dfm):    
+    nuevos_nombres = {
+        0: 'COD_PROD',
+        1: 'DESC_PROD',
+        2: 'EAN_13',
+        3: 'CATEGORIA_PROD',
+        4: 'FAMILIA_PROD',
+        5: 'MARCA_PROD',
+        6: 'SEGMENTO_PROD',
+        7: 'UND_X_CAJA',
+        8: 'PESO_X_UND',
+        9: 'PRESENTACION_PROD',
+        10: 'ESTADO_PROD'
+    }
+    
+    # Renombra las columnas usando los índices y los nuevos nombres
+    for col_index, new_nombre in nuevos_nombres.items():
+        ant_nombre = dfm.columns[col_index]
+        dfm = dfm.rename(columns={ant_nombre: new_nombre})
+    print('Renombró correctamente las columnas')
+
+    for col in dfm.select_dtypes(include=['object']).columns: 
+         dfm[col] = dfm[col].fillna(0.0)   
+         dfm[col] = dfm[col].astype('string')
+    print('Se cambió a String') 
+    
+
+    for col in dfm.select_dtypes(include=['string']).columns : 
+         dfm[col] = dfm[col].fillna('N/A')   
+         dfm[col] = dfm[col].str.replace(r'NULL', 'N/A', regex=True)    
+    print('Se CORRIGIÓ NULOS EN STRING') 
+   
+    for col in dfm.select_dtypes(include=['string']).columns: 
+        dfm[col] = dfm[col].apply(ftfy.fix_text) 
+    print('Corrigió decodificacion') 
+
+    for col in dfm.select_dtypes(include=['string']).columns : 
+        dfm[col] = dfm[col].str.replace(r'[!?-]', '', regex=True)    
+    print('Se eliminó caracteres especiales')    
+
+    indices_dfm = dfm.index
+    dfm_sin_duplicados = dfm.drop_duplicates(subset=['COD_PROD'], keep='first')
+    filas_eliminadas_pos =indices_dfm.difference(dfm_sin_duplicados.index)  
+    cant_eliminados = len(filas_eliminadas_pos)
+    if not filas_eliminadas_pos.empty : 
+        print(f"Se eliminaron los registros duplicados en las posiciones: {filas_eliminadas_pos.tolist()}") 
+        print(f"Se encontraron  :  {cant_eliminados} registros duplicados.")
+    else: 
+        print("No se encontraron duplicados.")
+    
+    dfm = dfm_sin_duplicados
+    return dfm 
+
+
+
+
 def detectar_separador(filepath):
     with open(filepath, 'r', encoding='utf-8') as file:
+        # Lee las primeras 1024 bytes del archivo para detectar el separador
+        sample = file.read(1024)
+        file.seek(0)  # Regresa el puntero al inicio del archivo
+
+        # Detecta el delimitador más probable usando Sniffer
+        dialect = csv.Sniffer().sniff(sample)
+
+    return dialect.delimiter
+
+
+def detectar_separador_montos(filepath):
+    with open(filepath, 'r', encoding='unicode-escape') as file:
         # Lee las primeras 1024 bytes del archivo para detectar el separador
         sample = file.read(1024)
         file.seek(0)  # Regresa el puntero al inicio del archivo
