@@ -4,8 +4,8 @@ import ftfy as f
 from FUNCIONES import *
 
 filepath = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Ventas.csv' 
-separador = detectar_separador(filepath) 
-dfcvent= pd.read_csv(filepath, delimiter = separador, encoding='unicode_escape',dtype='string') 
+# separador = detectar_separador(filepath) 
+dfcvent= pd.read_csv(filepath, delimiter = ';', encoding='unicode_escape',dtype='string') 
 num_columnas = dfcvent.shape[1]  
 print ("Tiene la siguiente cant de columnas : ", num_columnas) 
 
@@ -16,7 +16,7 @@ print ("Tiene la siguiente cant de columnas : ", num_columnas)
 
 print(dfcvent.head(100)) 
 print(dfcvent.info())
-if num_columnas == 10 :
+if num_columnas == 15 :
      dfcvent= corregir_columnas_VENTAS(dfcvent) 
      print(dfcvent.head(98))
      print("Todo ok") 
@@ -68,7 +68,7 @@ if num_columnas == 10 :
                conexion.close()
           
 
-     TESTINSTANCE = VENTAS(None, None, None, None, None, None, None, None, None, None)
+     TESTINSTANCE = VENTAS(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
      TESTINSTANCE.Grabar(dfcvent)
      print('CARGÓ CORRECTAMENTE VENTAS A BD')
         

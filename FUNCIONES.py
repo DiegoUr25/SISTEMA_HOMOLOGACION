@@ -334,10 +334,16 @@ def corregir_columnas_VENTAS(dfcvent):
     #      df[col] = df[col].str.replace(r'NULL', 'N/A', regex=True)    
     # print('Se CORRIGIÓ NULOS') 
 
-    for col in dfcvent.select_dtypes(include=['string']).columns : 
+    for col in dfcvent.select_dtypes(include=['object']).columns: 
          dfcvent[col] = dfcvent[col].fillna('N/A')   
-         dfcvent[col] = dfcvent[col].str.replace(r'NULL', 'N/A', regex=True)    
-    print('Se CORRIGIÓ NULOS EN STRING') 
+         dfcvent[col] = dfcvent[col].astype('string')
+         dfcvent[col] = dfcvent[col].str.replace(r'NULL', 'N/A', regex=True) 
+    print('Se cambió a String y corrigió nulos') 
+
+    # for col in dfcvent.select_dtypes(include=['string']).columns : 
+    #      dfcvent[col] = dfcvent[col].fillna('N/A')   
+    #      dfcvent[col] = dfcvent[col].str.replace(r'NULL', 'N/A', regex=True)    
+    # print('Se CORRIGIÓ NULOS EN STRING') 
 
     # for col in df.select_dtypes(include=['float64']).columns: 
     #     df[col] = df[col].fillna(0.0)   
@@ -353,7 +359,7 @@ def corregir_columnas_VENTAS(dfcvent):
         dfcvent[col] = dfcvent[col].apply(ftfy.fix_text) 
     print('Corrigió decodificacion') 
 
-    for col in dfcvent.select_dtypes(include=['object']).columns : 
+    for col in dfcvent.select_dtypes(include=['string']).columns : 
         dfcvent[col] = dfcvent[col].str.replace(r'[!?-]', '', regex=True)    
     print('Se eliminó caracteres especiales')    
 
