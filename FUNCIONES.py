@@ -4,7 +4,7 @@ import ftfy
 import sys
 import csv 
 import pypyodbc as odbc
-
+import subprocess
 
 def corregir_columnas_DISTRIBUIDORAS(dfd):
     nuevos_nombres = {
@@ -465,3 +465,15 @@ def db_connector():
  
     connection_string = 'DRIVER={'+DRIVER_NAME+'};SERVER='+SERVER_NAME+';DATABASE='+DATABASE_NAME+';Trusted_Connection=yes'
     return connection_string
+
+
+
+def ejecutar_scripts(script_nom):
+    try:
+        print(f"Ejecutando el script: {script_nom}")
+        subprocess.run(['python', script_nom], check=True)
+        print(f"El script {script_nom} se ejecutó correctamente.")
+    except subprocess.CalledProcessError as e:
+        print(f"Ocurrió un error al ejecutar el script: {e}")
+    except FileNotFoundError:
+        print(f"El archivo {script_nom} no se encontró en la carpeta actual.")

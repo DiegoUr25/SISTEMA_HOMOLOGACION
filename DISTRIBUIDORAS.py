@@ -1,11 +1,10 @@
-
 import pandas as pd 
 import sys
 import ftfy as f
 from datetime import *
 from FUNCIONES import *
 
-filepath_output =r'C:\Users\PC - Usuario\Desktop\ARCHIVOS\ARCHIVOS_PROCESADOS'
+filepath_output =r'C:/Users/PC - Usuario/Desktop/TESIS/ARCHIVOS/ARCHIVOS_PROCESADOS'
 filepath_input = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Maestro_Distribuidoras.csv' 
 separador = detectar_separador(filepath_input) 
 fecha_actual = datetime.now().strftime("%Y%m%d_%H%M%S")

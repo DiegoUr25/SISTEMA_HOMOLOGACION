@@ -1,12 +1,15 @@
-
 import pandas as pd 
 import sys
 import ftfy as f
+from datetime import *
 from FUNCIONES import *
 
-filepath = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Vendedores.csv' 
-separador = detectar_separador(filepath) 
-dfv= pd.read_csv(filepath, delimiter = separador, encoding='unicode_escape',dtype='string') 
+
+filepath_output =r'C:/Users/PC - Usuario/Desktop/TESIS/ARCHIVOS/ARCHIVOS_PROCESADOS'
+filepath_input = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Vendedores.csv' 
+separador = detectar_separador(filepath_input) 
+fecha_actual = datetime.now().strftime("%Y%m%d_%H%M%S")
+dfv= pd.read_csv(filepath_input, delimiter = separador, encoding='unicode_escape',dtype='string') 
 num_columnas = dfv.shape[1]  
 print ("Tiene la siguiente cant de columnas : ", num_columnas) 
 
@@ -37,29 +40,52 @@ if num_columnas == 9 :
           def Grabar(self, dfv): 
                conexion=odbc.connect(db_connector())   
                cursor = conexion.cursor() 
-               for index, row in dfv.iterrows():  
-                    self.COD_DISTRIBUIDORA = row['COD_DISTRIBUIDORA'] 
-                    self.COD_VENDEDOR = row['COD_VENDEDOR']
-                    self.NOMBRE_VENDEDOR = row['NOMBRE_VENDEDOR']
-                    self.TIPO_DOC_VENDEDOR = row['TIPO_DOC_VENDEDOR']
-                    self.NUM_DOC_VENDEDOR = row['NUM_DOC_VENDEDOR']
-                    self.CANAL_VENDEDOR = row['CANAL_VENDEDOR']
-                    self.COD_SUPERVISOR = row['COD_SUPERVISOR']
-                    self.NOMBRE_SUPERVISOR = row['NOMBRE_SUPERVISOR']
-                    self.CODIGO_GRUPO = row['CODIGO_GRUPO'] 
+
+               try: 
+                    cursor.execute("BEGIN TRANSACTION")
+                    for index, row in dfv.iterrows():  
+                         self.COD_DISTRIBUIDORA = row['COD_DISTRIBUIDORA'] 
+                         self.COD_VENDEDOR = row['COD_VENDEDOR']
+                         self.NOMBRE_VENDEDOR = row['NOMBRE_VENDEDOR']
+                         self.TIPO_DOC_VENDEDOR = row['TIPO_DOC_VENDEDOR']
+                         self.NUM_DOC_VENDEDOR = row['NUM_DOC_VENDEDOR']
+                         self.CANAL_VENDEDOR = row['CANAL_VENDEDOR']
+                         self.COD_SUPERVISOR = row['COD_SUPERVISOR']
+                         self.NOMBRE_SUPERVISOR = row['NOMBRE_SUPERVISOR']
+                         self.CODIGO_GRUPO = row['CODIGO_GRUPO'] 
 
 
-                    Insert="""INSERT INTO VENDEDORES (COD_DISTRIBUIDORA, COD_VENDEDOR, NOMBRE_VENDEDOR, TIPO_DOC_VENDEDOR, NUM_DOC_VENDEDOR, CANAL_VENDEDOR, COD_SUPERVISOR, NOMBRE_SUPERVISOR, CODIGO_GRUPO) 
-                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-         
-                    cursor.execute(Insert,(self.COD_DISTRIBUIDORA, self.COD_VENDEDOR, self.NOMBRE_VENDEDOR, self.TIPO_DOC_VENDEDOR, self.NUM_DOC_VENDEDOR, self.CANAL_VENDEDOR, self.COD_SUPERVISOR, self.NOMBRE_SUPERVISOR, self.CODIGO_GRUPO))
-               conexion.commit() 
-               conexion.close()
+                         Insert="""INSERT INTO VENDEDORES (COD_DISTRIBUIDORA, COD_VENDEDOR, NOMBRE_VENDEDOR, TIPO_DOC_VENDEDOR, NUM_DOC_VENDEDOR, CANAL_VENDEDOR, COD_SUPERVISOR, NOMBRE_SUPERVISOR, CODIGO_GRUPO) 
+                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+          
+                         cursor.execute(Insert,(
+                              self.COD_DISTRIBUIDORA, 
+                              self.COD_VENDEDOR, 
+                              self.NOMBRE_VENDEDOR, 
+                              self.TIPO_DOC_VENDEDOR, 
+                              self.NUM_DOC_VENDEDOR, 
+                              self.CANAL_VENDEDOR, 
+                              self.COD_SUPERVISOR, 
+                              self.NOMBRE_SUPERVISOR, 
+                              self.CODIGO_GRUPO
+                              ))
+                         conexion.commit() 
+               except Exception as e: 
+                     conexion.rollback()
+                     print(f"Error al grabar Vendedores: {e}")
+               finally:
+                     print('CARGÓ CORRECTAMENTE VENDEDORES A BD')
+                     conexion.close()
           
 
      TESTINSTANCE = Vendedores(None, None, None, None, None, None, None, None, None)
      TESTINSTANCE.Grabar(dfv)
-     print('CARGÓ CORRECTAMENTE VENDEDORES A BD')
+     nombre_tabla="VENDEDORES"
+     nombre_output = f"{filepath_output}\\{nombre_tabla}_{fecha_actual}.csv" 
+
+     dfv.to_csv(nombre_output, index=False)
+     print(f"Archivo procesado guardado como {nombre_output}")
+     
         
 else : 
          print("Faltan columnas , se detiene el proceso.") 
