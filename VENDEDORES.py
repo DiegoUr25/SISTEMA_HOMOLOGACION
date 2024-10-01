@@ -42,6 +42,7 @@ if num_columnas == 9 :
                cursor = conexion.cursor() 
 
                try: 
+                    cursor.execute("DELETE FROM CLIENTES")
                     cursor.execute("BEGIN TRANSACTION")
                     for index, row in dfv.iterrows():  
                          self.COD_DISTRIBUIDORA = row['COD_DISTRIBUIDORA'] 

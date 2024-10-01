@@ -5,7 +5,7 @@ from datetime import *
 from FUNCIONES import *
 
 filepath_output =r'C:/Users/PC - Usuario/Desktop/TESIS/ARCHIVOS/ARCHIVOS_PROCESADOS'
-filepath_input = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Maestro_Distribuidoras.csv' 
+filepath_input = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Productos.csv' 
 # separador = detectar_separador(filepath_input) 
 fecha_actual = datetime.now().strftime("%Y%m%d_%H%M%S")
 
@@ -39,7 +39,7 @@ if num_columnas == 7 :
           def Grabar(self, dfp): 
                conexion=odbc.connect(db_connector())   
                cursor = conexion.cursor() 
-
+               
                try: 
                     cursor.execute("BEGIN TRANSACTION") 
                     for index, row in dfp.iterrows():  
