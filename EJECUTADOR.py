@@ -17,6 +17,9 @@ def main():
     opcion = input("Ejecutar proceso de Carga : (Y/N) ")
 
     if opcion == "Y":
+        print("Limpiando las tablas.......") 
+        limpieza_de_tablas()
+        print("Limpieza completada.") 
         ejecutar_scripts('DISTRIBUIDORAS.py')
         print("INFORMACIÓN DE DISTRIBUIDORAS PROCESADA. ")
         ejecutar_scripts('VENDEDORES.py')

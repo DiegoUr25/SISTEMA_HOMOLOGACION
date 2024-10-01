@@ -477,3 +477,31 @@ def ejecutar_scripts(script_nom):
         print(f"Ocurrió un error al ejecutar el script: {e}")
     except FileNotFoundError:
         print(f"El archivo {script_nom} no se encontró en la carpeta actual.")
+
+def limpieza_de_tablas(): 
+    try: 
+        conexion = odbc.connect(db_connector()) 
+        cursor = conexion.cursor() 
+
+        deletes = { 
+            "DELETE FROM VENTAS;",
+            "DELETE FROM EQUIVALENCIAS;",
+            "DELETE FROM CLIENTES;",
+            "DELETE FROM PRODUCTOS;",
+            "DELETE FROM VENDEDORES;",
+            "DELETE FROM DISTRIBUIDORAS;",
+            "DELETE FROM MAESTRO_GENERAL;"
+
+        }
+        for delete in deletes: 
+            cursor.execute(delete) 
+            print(f"Ejecutado: {delete}")
+
+        conexion.commit()
+        print("Se limpiaron todas las tablas correctamente.") 
+    except odbc.Error as e: 
+        print(f"Ocurrió un error al limpiar las tablas: {e}")
+        conexion.rollback()
+    finally: 
+        if conexion: 
+            conexion.close()
