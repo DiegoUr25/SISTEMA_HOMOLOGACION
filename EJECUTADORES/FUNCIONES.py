@@ -5,6 +5,7 @@ import sys
 import csv 
 import pypyodbc as odbc
 import subprocess
+import os
 
 def corregir_columnas_DISTRIBUIDORAS(dfd):
     nuevos_nombres = {
@@ -194,7 +195,6 @@ def corregir_columnas_CLIENTES(dfc):
     dfc = dfc_sin_duplicados
     return dfc 
 
-
 def corregir_columnas_PRODUCTOS(dfp):    
     nuevos_nombres = {
         0: 'COD_DISTRIBUIDORA',
@@ -242,9 +242,6 @@ def corregir_columnas_PRODUCTOS(dfp):
     
     dfp = dfp_sin_duplicados
     return dfp 
-
-
-
 
 def corregir_columnas_EQUIVALENCIAS(dfe):    
     nuevos_nombres = {
@@ -301,7 +298,6 @@ def corregir_columnas_EQUIVALENCIAS(dfe):
     
     dfe = dfe_sin_duplicados
     return dfe 
-
 
 def corregir_columnas_VENTAS(dfcvent):    
     nuevos_nombres = {
@@ -376,9 +372,6 @@ def corregir_columnas_VENTAS(dfcvent):
     dfcvent = dfcvent_sin_duplicados
     return dfcvent 
 
-
-
-
 def corregir_columnas_MAESTRO_GENERAL(dfm):    
     nuevos_nombres = {
         0: 'COD_PROD',
@@ -432,9 +425,6 @@ def corregir_columnas_MAESTRO_GENERAL(dfm):
     dfm = dfm_sin_duplicados
     return dfm 
 
-
-
-
 def detectar_separador(filepath):
     with open(filepath, 'r', encoding='utf-8') as file:
         # Lee las primeras 1024 bytes del archivo para detectar el separador
@@ -445,7 +435,6 @@ def detectar_separador(filepath):
         dialect = csv.Sniffer().sniff(sample)
 
     return dialect.delimiter
-
 
 def detectar_separador_montos(filepath):
     with open(filepath, 'r', encoding='unicode-escape') as file:
@@ -466,9 +455,8 @@ def db_connector():
     connection_string = 'DRIVER={'+DRIVER_NAME+'};SERVER='+SERVER_NAME+';DATABASE='+DATABASE_NAME+';Trusted_Connection=yes'
     return connection_string
 
-
-
 def ejecutar_scripts(script_nom):
+
     try:
         print(f"Ejecutando el script: {script_nom}")
         subprocess.run(['python', script_nom], check=True)
@@ -478,30 +466,69 @@ def ejecutar_scripts(script_nom):
     except FileNotFoundError:
         print(f"El archivo {script_nom} no se encontró en la carpeta actual.")
 
-def limpieza_de_tablas(): 
-    try: 
-        conexion = odbc.connect(db_connector()) 
-        cursor = conexion.cursor() 
 
-        deletes = { 
-            "DELETE FROM VENTAS;",
-            "DELETE FROM EQUIVALENCIAS;",
-            "DELETE FROM CLIENTES;",
-            "DELETE FROM PRODUCTOS;",
-            "DELETE FROM VENDEDORES;",
-            "DELETE FROM DISTRIBUIDORAS;",
-            "DELETE FROM MAESTRO_GENERAL;"
 
-        }
-        for delete in deletes: 
-            cursor.execute(delete) 
-            print(f"Ejecutado: {delete}")
 
+def limpieza_de_tablas():
+    try:
+        conexion = odbc.connect(db_connector())  # Mantén una única conexión abierta
+        cursor = conexion.cursor()
+        
+        delete_ventas = "DELETE FROM VENTAS;"
+        msg = "LIMPIEZA DE VENTAS"
+        print(f"EJECUTANDO... ({msg.strip()})\n")
+        cursor.execute(delete_ventas)
+        conexion.commit()  # Confirmar la transacción
+        print(f"Ejecutado: {msg.strip()}\n")
+
+        delete_equivalencias = "DELETE FROM EQUIVALENCIAS;"
+        msg = "LIMPIEZA DE EQUIVALENCIAS"
+        print(f"EJECUTANDO... ({msg.strip()})\n")
+        cursor.execute(delete_equivalencias)
         conexion.commit()
-        print("Se limpiaron todas las tablas correctamente.") 
-    except odbc.Error as e: 
-        print(f"Ocurrió un error al limpiar las tablas: {e}")
-        conexion.rollback()
-    finally: 
-        if conexion: 
-            conexion.close()
+        print(f"Ejecutado: {msg.strip()}\n")
+
+        delete_clientes = "DELETE FROM CLIENTES;"
+        msg = "LIMPIEZA DE CLIENTES"
+        print(f"EJECUTANDO... ({msg.strip()})\n")
+        cursor.execute(delete_clientes)
+        conexion.commit()
+        print(f"Ejecutado: {msg.strip()}\n")
+
+        delete_productos = "DELETE FROM PRODUCTOS;"
+        msg = "LIMPIEZA DE PRODUCTOS"
+        print(f"EJECUTANDO... ({msg.strip()})\n")
+        cursor.execute(delete_productos)
+        conexion.commit()
+        print(f"Ejecutado: {msg.strip()}\n")
+
+        delete_vendedores = "DELETE FROM VENDEDORES;"
+        msg = "LIMPIEZA DE VENDEDORES"
+        print(f"EJECUTANDO... ({msg.strip()})\n")
+        cursor.execute(delete_vendedores)
+        conexion.commit()
+        print(f"Ejecutado: {msg.strip()}\n")
+
+        delete_distribuidoras = "DELETE FROM DISTRIBUIDORAS;"
+        msg = "LIMPIEZA DE DISTRIBUIDORAS"
+        print(f"EJECUTANDO... ({msg.strip()})\n")
+        cursor.execute(delete_distribuidoras)
+        conexion.commit()
+        print(f"Ejecutado: {msg.strip()}\n")
+
+        delete_maestro_general = "DELETE FROM MAESTRO_GENERAL;"
+        msg = "LIMPIEZA DE MAESTRO_GENERAL"
+        print(f"EJECUTANDO... ({msg.strip()})\n")
+        cursor.execute(delete_maestro_general)
+        conexion.commit()
+        print(f"Ejecutado: {msg.strip()}\n")
+
+        print("Se limpiaron todas las tablas correctamente.\n")
+
+    except odbc.Error as e:
+        print(f"Ocurrió un error al limpiar las tablas: {e}\n")
+        conexion.rollback()  
+
+    finally:
+        if conexion:
+            conexion.close()  
