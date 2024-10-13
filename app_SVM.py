@@ -61,5 +61,7 @@ def main():
     total_time = time.time() - start_time
     print(f"Tiempo total de ejecución: {total_time:.2f} segundos")
 
+print("ok")
+
 if __name__ == "__main__":
     main()
