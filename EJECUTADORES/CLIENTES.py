@@ -2,7 +2,7 @@ import pandas as pd
 import sys
 import ftfy as f
 from datetime import *
-from  FUNCIONES import *
+from ejecutadores.funciones import *
 
 filepath_output =r'C:/Users/PC - Usuario/Desktop/TESIS/ARCHIVOS/ARCHIVOS_PROCESADOS'
 filepath_input = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Clientes.csv' 
