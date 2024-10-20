@@ -7,6 +7,12 @@ import pypyodbc as odbc
 import subprocess
 import os
 
+import os
+
+# Obtiene el directorio actual donde se ejecuta el script
+current_directory = os.path.dirname(__file__)
+
+
 def corregir_columnas_DISTRIBUIDORAS(dfd):
     nuevos_nombres = {
         0: 'COD_DISTRIBUIDORA',
@@ -449,17 +455,19 @@ def detectar_separador_montos(filepath):
  
 def db_connector(): 
     DRIVER_NAME = 'SQL Server' 
-    SERVER_NAME = 'FREYA' 
-    DATABASE_NAME = 'DB_CARGA_D' 
+    SERVER_NAME = 'DESKTOP-05V00L9\SERVIDORSQL2022' 
+    DATABASE_NAME = 'DB_CARGA' 
  
     connection_string = 'DRIVER={'+DRIVER_NAME+'};SERVER='+SERVER_NAME+';DATABASE='+DATABASE_NAME+';Trusted_Connection=yes'
     return connection_string
 
-def ejecutar_scripts(script_nom):
-
+def ejecutar_scripts(script_nom): 
     try:
-        print(f"Ejecutando el script: {script_nom}")
-        subprocess.run(['python', script_nom], check=True)
+        # Obtener la ruta absoluta actual donde se encuentra el script que quieres ejecutar
+        script_path = os.path.join(current_directory, script_nom)
+        
+        print(f"Ejecutando el script: {script_path}")
+        subprocess.run(['python', script_path], check=True)
         print(f"El script {script_nom} se ejecutó correctamente.")
     except subprocess.CalledProcessError as e:
         print(f"Ocurrió un error al ejecutar el script: {e}")
