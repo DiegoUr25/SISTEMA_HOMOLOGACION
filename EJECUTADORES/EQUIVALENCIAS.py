@@ -2,11 +2,21 @@ import pandas as pd
 import sys
 import ftfy as f
 from datetime import *
-from FUNCIONES import *
+from funciones import *
+import os
 
+# filepath_output =r'C:/Users/PC - Usuario/Desktop/TESIS/ARCHIVOS/ARCHIVOS_PROCESADOS'
+# filepath_input = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Equivalencias.csv' 
 
-filepath_output =r'C:/Users/PC - Usuario/Desktop/TESIS/ARCHIVOS/ARCHIVOS_PROCESADOS'
-filepath_input = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Equivalencias.csv' 
+# Camino al directorio raíz desde la ubicación del script actual
+root_directory = os.path.dirname(os.path.dirname(__file__))
+
+# Construye las rutas hacia las carpetas input y output en el directorio raíz
+filepath_input = os.path.join(root_directory, 'input/Equivalencias.csv')
+filepath_output = os.path.join(root_directory, 'output')
+
+# print (filepath_input, filepath_output)
+
 
 class Equivalencias(): 
           def __init__(self,COD_DISTRIBUIDORA,COD_PROD_DISTRIBUIDOR,	COD_PROD_MAESTRO,	FECHA_REGISTRO,	USUARIO): 

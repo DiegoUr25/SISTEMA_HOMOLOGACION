@@ -2,11 +2,20 @@ import pandas as pd
 import sys
 import ftfy as f
 from datetime import *
-from FUNCIONES import *
+from funciones import *
+import os
 
+# filepath_output =r'C:/Users/PC - Usuario/Desktop/TESIS/ARCHIVOS/ARCHIVOS_PROCESADOS'
+# filepath_input = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Maestro_general.csv' 
 
-filepath_output =r'C:/Users/PC - Usuario/Desktop/TESIS/ARCHIVOS/ARCHIVOS_PROCESADOS'
-filepath_input = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Maestro_general.csv' 
+# Camino al directorio raíz desde la ubicación del script actual
+root_directory = os.path.dirname(os.path.dirname(__file__))
+
+# Construye las rutas hacia las carpetas input y output en el directorio raíz
+filepath_input = os.path.join(root_directory, 'input/Maestro_general.csv')
+filepath_output = os.path.join(root_directory, 'output')
+
+# print (filepath_input, filepath_output)
 
 class MAESTRO_GENERAL(): 
           def __init__(self,COD_PROD,DESC_PROD,	EAN_13,	CATEGORIA_PROD,	FAMILIA_PROD	,MARCA_PROD	,SEGMENTO_PROD	,UND_X_CAJA,	PESO_X_UND, PRESENTACION_PROD, ESTADO_PROD): 

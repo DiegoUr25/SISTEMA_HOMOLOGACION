@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Proceso ETL</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container mt-5">  <!-- Clase 'container' y 'mt-5' de Bootstrap para márgenes -->
+        <h1>Bienvenido a la Interfaz de Proceso ETL</h1>
+        <p>Sube los archivos para procesar:</p>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <label class="btn btn-custom-upload">Elegir archivos
+                <input type="file" name="files" multiple style="display: none;">
+            </label>
+            
+            <input type="submit" value="Subir Archivos" class="btn btn-custom-submit">
+        </form>
+
+        <button type="button" class="btn btn-custom-execute" data-toggle="modal" data-target="#confirmModal" style="margin-top: 18px; width: 100%;">
+            Ejecutar ETL
+        </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmModalLabel">Confirmar Ejecución</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas ejecutar el proceso ETL?
+                </div>
+                <div class="modal-footer">
+                    <form action="/confirm" method="post" class="w-100">
+                        <button type="submit" class="btn btn-primary btn-block" name="confirm" value="Y">Sí, ejecutar</button>
+                        <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Cancelar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Mostrar enlaces de descarga solo si hay archivos disponibles -->
+{% if files_available %}
+    <h3>Download Output Files:</h3>
+    {% for file in files_available %}
+        <a href="{{ url_for('download_file', filename=file) }}" class="btn btn-primary">Download {{ file }}</a>
+    {% endfor %}
+{% endif %}
+
+
+    <!-- Incluir Bootstrap JS y jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

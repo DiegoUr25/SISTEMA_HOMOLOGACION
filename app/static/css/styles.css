@@ -1,0 +1,66 @@
+body {
+    background-color: #f4f4f4; /* Color de fondo más suave */
+    font-family: 'Arial', sans-serif;
+}
+
+.code-container {
+    background-color: #333;  /* Fondo oscuro para mayor contraste */
+    color: #f8f8f2;  /* Texto claro */
+    border: 1px solid #ccc;  /* Borde sutil */
+    padding: 15px;  /* Espacio interno para evitar que el texto toque los bordes */
+    border-radius: 4px;  /* Bordes suavemente redondeados */
+    overflow-x: auto;  /* Permite desplazamiento horizontal si el código es muy largo */
+    white-space: nowrap;  /* Evita que las líneas de código se rompan */
+    font-family: 'Consolas', 'Monaco', 'Source Code Pro', monospace;
+}
+
+h1 {
+    color: #333; /* Color más suave para el texto */
+    margin-bottom: 20px; /* Más espacio debajo del encabezado */
+}
+
+input[type="submit"], button.btn, label.btn {
+    width: 100%; /* Ajusta el ancho al 100% del contenedor */
+    padding: 10px; /* Agrega padding para que sea más fácil de clickear */
+    margin-top: 10px; /* Espacio entre elementos */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor en forma de mano para indicar clickeabilidad */
+    border: none;  /* Sin borde */
+}
+
+.btn-custom-upload {
+    background-color: #007bff; /* Azul */
+    color: white;
+}
+
+.btn-custom-upload:hover {
+    background-color: #0056b3; /* Azul más oscuro en hover */
+    color: white;
+}
+
+.btn-custom-submit {
+    background-color: #dc3545; /* Rojo */
+    color: white;
+}
+
+.btn-custom-submit:hover {
+    background-color: #c82333; /* Rojo oscuro en hover */
+    color: white;
+}
+
+.btn-custom-execute {
+    background-color: #ffc107; /* Amarillo */
+    color: black;
+}
+
+.btn-custom-execute:hover {
+    background-color: #e0a800; /* Amarillo más claro en hover */
+    color: white;
+}
+
+
+.modal-footer button {
+    width: 100%; /* Asegura que cada botón ocupe todo el ancho disponible */
+}
+
+

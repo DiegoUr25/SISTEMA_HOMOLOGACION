@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Proceso ETL</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                    <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <span class="fs-5 d-none d-sm-inline">Menu</span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                        <li class="nav-item">
+                            <a href="/ETL" class="nav-link align-middle px-0">
+                                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Proceso ETL</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#submenu3" data-toggle="collapse" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Archivos Generados</span> </a>
+                                <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                                <li class="w-100">
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Ventas</span></a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Equivalencias</span></a>
+                                </li>
+                                <li>
+                                    <a href="/distribuidoras" class="nav-link px-0"> <span class="d-none d-sm-inline">Maestro Distribuidoras</span></a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Vendedores</span></a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Clientes</span></a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Maestro General</span></a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Productos</span></a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Proceso Homologación</span> </a>
+                        </li>
+                    </ul>
+                    <hr>
+                    <div class="dropdown pb-4">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                            <span class="d-none d-sm-inline mx-1">Daniel</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col py-3">
+                <div class="container mt-5">  <!-- Clase 'container' y 'mt-5' de Bootstrap para márgenes -->
+                    <h1>Bienvenido a la Interfaz de Proceso ETL</h1>
+                    <p>Sube los archivos para procesar:</p>
+                    <form action="/upload" method="post" enctype="multipart/form-data">
+                        <label class="btn btn-custom-upload">Elegir archivos
+                            <input type="file" name="files" multiple style="display: none;">
+                        </label>
+                        
+                        <input type="submit" value="Subir Archivos" class="btn btn-custom-submit">
+                    </form>
+            
+                    <button type="button" class="btn btn-custom-execute" data-toggle="modal" data-target="#confirmModal" style="margin-top: 18px; width: 100%;">
+                        Ejecutar ETL
+                    </button>
+            
+                <!-- Modal -->
+                <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="confirmModalLabel">Confirmar Ejecución</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                ¿Estás seguro de que deseas ejecutar el proceso ETL?
+                            </div>
+                            <div class="modal-footer">
+                                <form action="/confirm" method="post" class="w-100">
+                                    <button type="submit" class="btn btn-primary btn-block" name="confirm" value="Y">Sí, ejecutar</button>
+                                    <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Cancelar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+            <!-- Mostrar enlaces de descarga solo si hay archivos disponibles -->
+            {% if files_available %}
+                <h3>Download Output Files:</h3>
+                {% for file in files_available %}
+                    <a href="{{ url_for('download_file', filename=file) }}" class="btn btn-primary">Download {{ file }}</a>
+                {% endfor %}
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Incluir Bootstrap JS y jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+</body>
+</html>
