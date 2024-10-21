@@ -2,10 +2,22 @@ import pandas as pd
 import sys
 import ftfy as f
 from datetime import *
-from FUNCIONES import *
+from funciones import *
+import os
 
-filepath_output =r'C:/Users/PC - Usuario/Desktop/TESIS/ARCHIVOS/ARCHIVOS_PROCESADOS'
-filepath_input = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Ventas.csv'
+# filepath_output =r'C:/Users/PC - Usuario/Desktop/TESIS/ARCHIVOS/ARCHIVOS_PROCESADOS'
+# filepath_input = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Ventas.csv'
+
+# Camino al directorio raíz desde la ubicación del script actual
+root_directory = os.path.dirname(os.path.dirname(__file__))
+
+# Construye las rutas hacia las carpetas input y output en el directorio raíz
+filepath_input = os.path.join(root_directory, 'input/Ventas.csv')
+filepath_output = os.path.join(root_directory, 'output')
+
+# print (filepath_input, filepath_output)
+
+
 class VENTAS(): 
           def __init__(self,COD_DISTRIBUIDORA,COD_VENTA,	NUM_FACTURA,	FECHA,	COD_CLIENTE	,COD_ITEM	,COD_PRODUCTO	,CANTIDAD_UND_MIN,	TIPO_UND_MIN, CANT_UND_MAX, TIPO_UND_MAX,VENTA_SINIGV,VENTA_CONIGV,TIPO_PRODUCTO,COD_VENDEDOR): 
                self.COD_DISTRIBUIDORA = COD_DISTRIBUIDORA 

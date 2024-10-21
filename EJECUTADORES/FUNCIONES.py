@@ -540,3 +540,45 @@ def limpieza_de_tablas():
     finally:
         if conexion:
             conexion.close()  
+
+
+def obtener_datos_distribuidoras():
+    connection_string = db_connector()
+
+    try:
+        # Conexión a la base de datos usando pyodbc
+        conn = odbc.connect(connection_string)
+        cursor = conn.cursor()
+
+        # Consulta para obtener los datos de la tabla Distribuidoras
+        query = """
+            SELECT COD_DISTRIBUIDORA, RUC_DISTRIBUIDORA, RAZ_SOCIAL_DISTRIBUIDORA, 
+                   NOMBRE_DISTRIBUIDORA, REGION_DISTRIBUIDORA, DEPARTAMENTO_DISTRIBUIDORA, 
+                   DISTRITO_DISTRIBUIDORA, ESTADO_DISTRIBUIDORA 
+            FROM Distribuidoras
+        """
+        cursor.execute(query)
+        datos = cursor.fetchall()
+
+        # Cerrar conexión
+        conn.close()
+
+        # Devuelve los datos como una lista de diccionarios
+        distribuidoras = []
+        for fila in datos:
+            distribuidoras.append({
+                'COD_DISTRIBUIDORA': fila[0],
+                'RUC_DISTRIBUIDORA': fila[1],
+                'RAZ_SOCIAL_DISTRIBUIDORA': fila[2],
+                'NOMBRE_DISTRIBUIDORA': fila[3],
+                'REGION_DISTRIBUIDORA': fila[4],
+                'DEPARTAMENTO_DISTRIBUIDORA': fila[5],
+                'DISTRITO_DISTRIBUIDORA': fila[6],
+                'ESTADO_DISTRIBUIDORA': fila[7]
+            })
+
+        return distribuidoras
+
+    except odbc.Error as e:
+        print(f"Error al conectar a la base de datos: {e}")
+        return []
