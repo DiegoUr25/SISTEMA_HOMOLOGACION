@@ -8,20 +8,10 @@ import os
 # filepath_output =r'C:/Users/PC - Usuario/Desktop/TESIS/ARCHIVOS/ARCHIVOS_PROCESADOS'
 # filepath_input = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Maestro_Distribuidoras.csv' 
 
-# Camino al directorio raíz desde la ubicación del script actual
 root_directory = os.path.dirname(os.path.dirname(__file__))
 
-# Construye las rutas hacia las carpetas input y output en el directorio raíz
 filepath_input = os.path.join(root_directory, 'input/Maestro_Distribuidoras.csv')
 filepath_output = os.path.join(root_directory, 'output')
-
-# print (filepath_input, filepath_output)
-
-###TRANSFORMACION SSSdfddd
-    #VALIDACIÓN DE FORMATO DE COLUMNAS ADMITIDAS PARA EL PROCESO 
-    #TODO:TABLA DE TABLAS REGISTRO DE FECHA DE CARGA COMO HISTÓRICO 
-    #TODO:WHAT IF RECIBES UNA COLUMNA DE NÚMEROS TE PONEN UN TEXTO CORREGIR EN FUNCIONES DE LIMPIEZA
-    #TODO:USAR EL INDEX DEL BUCLE PARA QUE TE DIGA DÓNDE SUCEDIÓ EL ERROR , INCLUIR UN ARCHIVO QUE TE INDIQUE EN QUÉ TABLA Y DÓNDE ESTÁ EL ERROR, FECHA Y HORA DE INICIO Y FIN
 
 class DISTRIBUIDORAS(): 
             def __init__(self,COD_DISTRIBUIDORA,	RUC_DISTRIBUIDORA,	RAZ_SOCIAL_DISTRIBUIDORA,	NOMBRE_DISTRIBUIDORA,	REGION_DISTRIBUIDORA,	DEPARTAMENTO_DISTRIBUIDORA,	DISTRITO_DISTRIBUIDORA,	ESTADO_DISTRIBUIDORA): 

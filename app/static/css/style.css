@@ -1,0 +1,396 @@
+/* Reset básico y configuración global */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Evita cualquier scroll horizontal innecesario */
+  font-family: "Arial", sans-serif;
+  background-color: #f4f4f4;
+}
+
+/* Estilos para los enlaces del Sidebar */
+.nav {
+  padding-bottom: 20px; /* Añade espacio al final de las opciones del menú */
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px; /* Ajuste del padding para mayor uniformidad */
+  font-size: 16px;
+  text-decoration: none;
+  color: white; /* Cambiado a blanco para mejor contraste */
+  transition: background-color 0.3s, transform 0.3s;
+  margin: 0; /* Elimina margen para una alineación exacta */
+}
+
+.nav-link .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px; /* Ajusta el tamaño del ancho del icono */
+  margin-right: 8px; /* Espacio entre icono y texto */
+}
+
+.nav-link.active {
+  background-color: #34495e; /* Azul gris oscuro para estado activo */
+  font-weight: bold;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #3c5975; /* Azul ligeramente más claro para hover */
+  color: #fff; /* Asegura que el texto siga siendo blanco */
+  transform: scale(1.05);
+}
+
+.nav-link:hover {
+  /* Eliminado color de fondo anterior para evitar conflictos */
+  color: #fff; /* Mantiene el texto blanco */
+  transition: all 0.3s ease;
+  padding-left: 20px; /* Un pequeño desplazamiento hacia la derecha */
+}
+
+/* Estilos principales del Sidebar */
+.sidebar {
+  background-color: #2C3E50; /* Azul gris oscuro */
+  color: #fff; /* Color de texto en el sidebar cambiado a blanco */
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: width 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar.collapsed {
+  width: 60px;
+}
+
+.sidebar.collapsed .link-text {
+  display: none;
+}
+
+.sidebar.collapsed .nav-link .icon {
+  margin-right: 0;
+  justify-content: center;
+}
+
+.sidebar.collapsed .user-profile {
+  flex-direction: column;
+  padding-top: 10px;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  margin: 19px;
+}
+
+/* Perfil de usuario en el sidebar */
+.user-profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-top: 1px solid #666;
+  color: #fff; /* Cambiado a blanco */
+  cursor: pointer;
+  position: relative;
+  background-color: #2C3E50; /* Coincide con el fondo del sidebar */
+}
+
+.sidebar.collapsed + .main-content {
+  margin-left: 60px;
+  width: calc(100% - 60px); /* Ajusta el ancho según el sidebar colapsado */
+}
+
+.user-profile:hover {
+  background-color: #1A252F; /* Azul aún más oscuro para hover */
+}
+
+.user-profile p {
+  margin: 0 0 0 8px; /* Menor espacio entre el icono y el nombre */
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.profile-icon {
+  font-size: 20px;
+}
+
+.profile-menu {
+  display: none;
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #34495e; /* Azul gris oscuro para el menú */
+  border-radius: 5px;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  width: 120px; /* Define un ancho específico */
+}
+
+.profile-menu a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-align: center; /* Alinea el texto */
+}
+
+.profile-menu a:hover {
+  background-color: #3c5975; /* Azul ligeramente más claro para hover */
+}
+
+.sidebar.collapsed .user-profile p {
+  display: none;
+}
+
+/* Configuración del contenedor flex */
+.d-flex {
+  display: flex;
+  height: 100vh;
+}
+
+.main-content {
+  margin-left: 250px;
+  padding: 20px;
+  width: calc(100% - 250px); /* Asegura que ocupa todo el ancho restante */
+  min-height: 100vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #f0f4f3; /* Color gris claro para contraste */
+  color: #333; /* Color de texto */
+  border-radius: 8px;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+  flex-grow: 1; /* Ocupa todo el espacio restante */
+}
+
+.main-content.expanded {
+  margin-left: 60px;
+  width: calc(100% - 60px);
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center; /* Alineación central para simetría */
+  color: #3a4a40; /* Tono gris oscuro para el título */
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  background-color: #e9ecef;
+  padding: 8px 12px;
+  margin: 20px auto; /* Centrado horizontal */
+  font-size: 0.9rem;
+  color: #666;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.breadcrumb-item a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: ">";
+  padding: 0 5px;
+  color: #6c757d;
+}
+
+/* Estilo para el contenedor de la caja principal */
+.container-box {
+  background-color: #f5f5dc; /* Color beige */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 500px;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* Estilo de los botones */
+.button-group {
+  display: flex;
+  flex-direction: row; /* Cambiado de column a row para alinear horizontalmente */
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: center; /* Centra los botones horizontalmente */
+}
+
+.button-blue,
+.button-red,
+.button-yellow {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px; /* Aumentado el padding horizontal */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: opacity 0.3s;
+}
+
+.button-red {
+  background-color: #dc3545;
+}
+
+.button-yellow {
+  background-color: #ffc107;
+}
+
+.button-blue:hover,
+.button-red:hover,
+.button-yellow:hover {
+  opacity: 0.9;
+}
+
+/* Estilos del modal */
+.modal {
+  display: none; /* Oculto por defecto */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  max-width: 400px;
+  margin: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content button {
+  margin: 10px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-content button:first-child {
+  background-color: #28a745;
+  color: white;
+}
+
+.modal-content button:last-child {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Estilo para el overlay de carga */
+.loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Estilo para el contenedor de la caja principal */
+.container-box {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 700px;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  /* Estilo para el área de log */
+.log-area {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    height: 200px;
+    overflow-y: scroll;
+    border-radius: 5px;
+    text-align: left;
+  }
+  
+  /* Notificación */
+  .notification {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+  }
+
+
+  .notification.success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+  }
+  
+  .notification.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }

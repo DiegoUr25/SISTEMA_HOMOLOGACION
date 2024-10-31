@@ -8,10 +8,8 @@ import os
 # filepath_output =r'C:/Users/PC - Usuario/Desktop/TESIS/ARCHIVOS/ARCHIVOS_PROCESADOS'
 # filepath_input = 'C:/Users/PC - Usuario/Desktop/PRUEBAS_ETL/TABLAS/Productos.csv' 
 
-# Camino al directorio raíz desde la ubicación del script actual
 root_directory = os.path.dirname(os.path.dirname(__file__))
 
-# Construye las rutas hacia las carpetas input y output en el directorio raíz
 filepath_input = os.path.join(root_directory, 'input/Productos.csv')
 filepath_output = os.path.join(root_directory, 'output')
 

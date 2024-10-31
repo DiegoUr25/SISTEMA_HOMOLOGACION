@@ -9,7 +9,6 @@ import os
 
 import os
 
-# Obtiene el directorio actual donde se ejecuta el script
 current_directory = os.path.dirname(__file__)
 
 
@@ -25,7 +24,6 @@ def corregir_columnas_DISTRIBUIDORAS(dfd):
         7: 'ESTADO_DISTRIBUIDORA'
     }
     
-    # Renombra las columnas usando los índices y los nuevos nombres
     for col_index, new_nombre in nuevos_nombres.items():
         ant_nombre = dfd.columns[col_index]
         dfd = dfd.rename(columns={ant_nombre: new_nombre})
@@ -57,7 +55,7 @@ def corregir_columnas_DISTRIBUIDORAS(dfd):
 
     for col in dfd.select_dtypes(include=['object']).columns : 
         dfd[col] = dfd[col].str.replace(r'[!?-]', '', regex=True)    
-    print('Se eliminó caracteres especiales')    
+    print('Se eliminó caracteres especiales')
 
     indices_dfd = dfd.index
     dfd_sin_duplicados = dfd.drop_duplicates(subset=['COD_DISTRIBUIDORA'], keep='first')
@@ -86,31 +84,15 @@ def corregir_columnas_VENDEDORES(dfv):
         8: 'CODIGO_GRUPO'
     }
     
-    # Renombra las columnas usando los índices y los nuevos nombres
     for col_index, new_nombre in nuevos_nombres.items():
         ant_nombre = dfv.columns[col_index]
         dfv = dfv.rename(columns={ant_nombre: new_nombre})
     print('Renombró correctamente las columnas')
 
-    # for col in df.select_dtypes(include=['object']).columns : 
-    #      df[col] = df[col].fillna('N/A')   
-    #      df[col] = df[col].str.replace(r'NULL', 'N/A', regex=True)    
-    # print('Se CORRIGIÓ NULOS') 
-
     for col in dfv.select_dtypes(include=['string']).columns : 
          dfv[col] = dfv[col].fillna('N/A')   
          dfv[col] = dfv[col].str.replace(r'NULL', 'N/A', regex=True)    
     print('Se CORRIGIÓ NULOS EN STRING') 
-
-    # for col in df.select_dtypes(include=['float64']).columns: 
-    #     df[col] = df[col].fillna(0.0)   
-    #     df[col] = df[col].astype('int64')
-    # print('Se cambió a Int') 
-
-    # for col in df.select_dtypes(include=['int64']).columns: 
-    #     df[col] = df[col].astype('string')
-    #     df[col] = df[col].str.replace(r'0', 'N/A', regex=True)  
-    # print('Se cambió a string')  
 
     for col in dfv.select_dtypes(include=['string']).columns: 
         dfv[col] = dfv[col].apply(ftfy.fix_text) 
@@ -120,9 +102,6 @@ def corregir_columnas_VENDEDORES(dfv):
          dfv[col] = dfv[col].str.replace(r'[!?-]', '', regex=True)    
     print('Se eliminó caracteres especiales')    
     
-
-    # Muestra la información del DataFrame resultante
-    #df.info()
     indices_dfv = dfv.index
     dfv_sin_duplicados = dfv.drop_duplicates(subset=['COD_DISTRIBUIDORA', 'COD_VENDEDOR'], keep='first')
     filas_eliminadas_pos =indices_dfv.difference(dfv_sin_duplicados.index)  
@@ -150,31 +129,15 @@ def corregir_columnas_CLIENTES(dfc):
         9: 'ESTADO_CLIENTE'
     }
     
-    # Renombra las columnas usando los índices y los nuevos nombres
     for col_index, new_nombre in nuevos_nombres.items():
         ant_nombre = dfc.columns[col_index]
         dfc = dfc.rename(columns={ant_nombre: new_nombre})
     print('Renombró correctamente las columnas')
 
-    # for col in df.select_dtypes(include=['object']).columns : 
-    #      df[col] = df[col].fillna('N/A')   
-    #      df[col] = df[col].str.replace(r'NULL', 'N/A', regex=True)    
-    # print('Se CORRIGIÓ NULOS') 
-
     for col in dfc.select_dtypes(include=['string']).columns : 
          dfc[col] = dfc[col].fillna('N/A')   
          dfc[col] = dfc[col].str.replace(r'NULL', 'N/A', regex=True)    
     print('Se CORRIGIÓ NULOS EN STRING') 
-
-    # for col in df.select_dtypes(include=['float64']).columns: 
-    #     df[col] = df[col].fillna(0.0)   
-    #     df[col] = df[col].astype('int64')
-    # print('Se cambió a Int') 
-
-    # for col in df.select_dtypes(include=['int64']).columns: 
-    #     df[col] = df[col].astype('string')
-    #     df[col] = df[col].str.replace(r'0', 'N/A', regex=True)  
-    # print('Se cambió a string')  
 
     for col in dfc.select_dtypes(include=['string']).columns: 
         dfc[col] = dfc[col].apply(ftfy.fix_text) 
@@ -194,10 +157,7 @@ def corregir_columnas_CLIENTES(dfc):
 
     else: 
         print("No se encontraron duplicados.")
-    
 
-    # Muestra la información del DataFrame resultante
-    #df.info()
     dfc = dfc_sin_duplicados
     return dfc 
 
@@ -212,7 +172,6 @@ def corregir_columnas_PRODUCTOS(dfp):
         6: 'FACTOR_UNI_MAX'
     }
     
-    # Renombra las columnas usando los índices y los nuevos nombres
     for col_index, new_nombre in nuevos_nombres.items():
         ant_nombre = dfp.columns[col_index]
         dfp = dfp.rename(columns={ant_nombre: new_nombre})
@@ -224,10 +183,6 @@ def corregir_columnas_PRODUCTOS(dfp):
          dfp[col] = dfp[col].str.replace(r'NULL', 'N/A', regex=True) 
     print('Se cambió a String y corrigió nulos') 
 
-    # for col in dfp.select_dtypes(include=['string']).columns : 
-    #      dfp[col] = dfp[col].fillna('N/A')   
-    #      dfp[col] = dfp[col].str.replace(r'NULL', 'N/A', regex=True)    
-    # print('Se CORRIGIÓ NULOS EN STRING') 
     for col in dfp.select_dtypes(include=['string']).columns: 
         dfp[col] = dfp[col].apply(ftfy.fix_text) 
     print('Corrigió decodificacion') 
@@ -258,31 +213,15 @@ def corregir_columnas_EQUIVALENCIAS(dfe):
         4: 'USUARIO'
     }
     
-    # Renombra las columnas usando los índices y los nuevos nombres
     for col_index, new_nombre in nuevos_nombres.items():
         ant_nombre = dfe.columns[col_index]
         dfe = dfe.rename(columns={ant_nombre: new_nombre})
     print('Renombró correctamente las columnas')
 
-    # for col in df.select_dtypes(include=['object']).columns : 
-    #      df[col] = df[col].fillna('N/A')   
-    #      df[col] = df[col].str.replace(r'NULL', 'N/A', regex=True)    
-    # print('Se CORRIGIÓ NULOS') 
-
     for col in dfe.select_dtypes(include=['string']).columns : 
          dfe[col] = dfe[col].fillna('N/A')   
          dfe[col] = dfe[col].str.replace(r'NULL', 'N/A', regex=True)    
     print('Se CORRIGIÓ NULOS EN STRING') 
-
-    # for col in df.select_dtypes(include=['float64']).columns: 
-    #     df[col] = df[col].fillna(0.0)   
-    #     df[col] = df[col].astype('int64')
-    # print('Se cambió a Int') 
-
-    # for col in df.select_dtypes(include=['int64']).columns: 
-    #     df[col] = df[col].astype('string')
-    #     df[col] = df[col].str.replace(r'0', 'N/A', regex=True)  
-    # print('Se cambió a string')  
 
     for col in dfe.select_dtypes(include=['string']).columns: 
         dfe[col] = dfe[col].apply(ftfy.fix_text) 
@@ -325,37 +264,16 @@ def corregir_columnas_VENTAS(dfcvent):
 
     }
     
-    # Renombra las columnas usando los índices y los nuevos nombres
     for col_index, new_nombre in nuevos_nombres.items():
         ant_nombre = dfcvent.columns[col_index]
         dfcvent = dfcvent.rename(columns={ant_nombre: new_nombre})
     print('Renombró correctamente las columnas')
-
-    # for col in df.select_dtypes(include=['object']).columns : 
-    #      df[col] = df[col].fillna('N/A')   
-    #      df[col] = df[col].str.replace(r'NULL', 'N/A', regex=True)    
-    # print('Se CORRIGIÓ NULOS') 
 
     for col in dfcvent.select_dtypes(include=['object']).columns: 
          dfcvent[col] = dfcvent[col].fillna('N/A')   
          dfcvent[col] = dfcvent[col].astype('string')
          dfcvent[col] = dfcvent[col].str.replace(r'NULL', 'N/A', regex=True) 
     print('Se cambió a String y corrigió nulos') 
-
-    # for col in dfcvent.select_dtypes(include=['string']).columns : 
-    #      dfcvent[col] = dfcvent[col].fillna('N/A')   
-    #      dfcvent[col] = dfcvent[col].str.replace(r'NULL', 'N/A', regex=True)    
-    # print('Se CORRIGIÓ NULOS EN STRING') 
-
-    # for col in df.select_dtypes(include=['float64']).columns: 
-    #     df[col] = df[col].fillna(0.0)   
-    #     df[col] = df[col].astype('int64')
-    # print('Se cambió a Int') 
-
-    # for col in df.select_dtypes(include=['int64']).columns: 
-    #     df[col] = df[col].astype('string')
-    #     df[col] = df[col].str.replace(r'0', 'N/A', regex=True)  
-    # print('Se cambió a string')  
 
     for col in dfcvent.select_dtypes(include=['string']).columns: 
         dfcvent[col] = dfcvent[col].apply(ftfy.fix_text) 
@@ -393,7 +311,6 @@ def corregir_columnas_MAESTRO_GENERAL(dfm):
         10: 'ESTADO_PROD'
     }
     
-    # Renombra las columnas usando los índices y los nuevos nombres
     for col_index, new_nombre in nuevos_nombres.items():
         ant_nombre = dfm.columns[col_index]
         dfm = dfm.rename(columns={ant_nombre: new_nombre})
@@ -433,22 +350,18 @@ def corregir_columnas_MAESTRO_GENERAL(dfm):
 
 def detectar_separador(filepath):
     with open(filepath, 'r', encoding='utf-8') as file:
-        # Lee las primeras 1024 bytes del archivo para detectar el separador
         sample = file.read(1024)
-        file.seek(0)  # Regresa el puntero al inicio del archivo
+        file.seek(0) 
 
-        # Detecta el delimitador más probable usando Sniffer
         dialect = csv.Sniffer().sniff(sample)
 
     return dialect.delimiter
 
 def detectar_separador_montos(filepath):
     with open(filepath, 'r', encoding='unicode-escape') as file:
-        # Lee las primeras 1024 bytes del archivo para detectar el separador
         sample = file.read(1024)
-        file.seek(0)  # Regresa el puntero al inicio del archivo
+        file.seek(0) 
 
-        # Detecta el delimitador más probable usando Sniffer
         dialect = csv.Sniffer().sniff(sample)
 
     return dialect.delimiter
@@ -463,7 +376,6 @@ def db_connector():
 
 def ejecutar_scripts(script_nom): 
     try:
-        # Obtener la ruta absoluta actual donde se encuentra el script que quieres ejecutar
         script_path = os.path.join(current_directory, script_nom)
         
         print(f"Ejecutando el script: {script_path}")
@@ -479,7 +391,7 @@ def ejecutar_scripts(script_nom):
 
 def limpieza_de_tablas():
     try:
-        conexion = odbc.connect(db_connector())  # Mantén una única conexión abierta
+        conexion = odbc.connect(db_connector()) 
         cursor = conexion.cursor()
         
         delete_ventas = "DELETE FROM VENTAS;"
@@ -546,11 +458,9 @@ def obtener_datos_distribuidoras():
     connection_string = db_connector()
 
     try:
-        # Conexión a la base de datos usando pyodbc
         conn = odbc.connect(connection_string)
         cursor = conn.cursor()
 
-        # Consulta para obtener los datos de la tabla Distribuidoras
         query = """
             SELECT COD_DISTRIBUIDORA, RUC_DISTRIBUIDORA, RAZ_SOCIAL_DISTRIBUIDORA, 
                    NOMBRE_DISTRIBUIDORA, REGION_DISTRIBUIDORA, DEPARTAMENTO_DISTRIBUIDORA, 
@@ -560,10 +470,8 @@ def obtener_datos_distribuidoras():
         cursor.execute(query)
         datos = cursor.fetchall()
 
-        # Cerrar conexión
         conn.close()
 
-        # Devuelve los datos como una lista de diccionarios
         distribuidoras = []
         for fila in datos:
             distribuidoras.append({

@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Proceso ETL</title>
+    <title>Inicio</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -64,12 +65,85 @@
                     </div>
                 </div>
             </div>
-            <div class="col py-3">                    
+            <div class="col py-3">         
+                <div class="container mt-5">
+                    <h1>Dashboard del Proceso ETL</h1>
+            
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>Distribución de Distribuidoras por Estado</h3>
+                            <canvas id="pieChart"></canvas>
+                        </div>
+            
+                        <div class="col-md-6">
+                            <h3>Distribución de Distribuidoras por Región</h3>
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+
+
+                </div>
             </div>
         </div>
     </div>
-    
-    <!-- Incluir Bootstrap JS y jQuery -->
+    <script>
+        const pieData = {
+            labels: ['Activas', 'Inactivas'],
+            datasets: [{
+                label: 'Estado de Distribuidoras',
+                data: [70, 30],  
+                backgroundColor: ['#28a745', '#dc3545'], 
+                borderColor: ['#fff', '#fff'],
+                borderWidth: 1
+            }]
+        };
+
+        const pieConfig = {
+            type: 'pie',
+            data: pieData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                }
+            }
+        };
+
+        const pieChart = new Chart(
+            document.getElementById('pieChart'),
+            pieConfig
+        );
+
+        const barData = {
+            labels: ['Lima', 'Norte', 'Centro', 'Oriente'], 
+            datasets: [{
+                label: 'Cantidad de Distribuidoras',
+                data: [50, 20, 15, 10], 
+                backgroundColor: '#007bff',
+                borderColor: '#0056b3',
+                borderWidth: 1
+            }]
+        };
+
+        const barConfig = {
+            type: 'bar',
+            data: barData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+        const barChart = new Chart(
+            document.getElementById('barChart'),
+            barConfig
+        );
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

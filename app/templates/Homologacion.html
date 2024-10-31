@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Homologación</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+
+    <!-- Sidebar Menu -->
+    <div class="d-flex">
+        <div>
+            <nav class="sidebar" id="sidebar">
+                <div class="text-center">
+                    <button id="toggleSidebar" class="toggle-btn" aria-label="Toggle Sidebar"
+                        onclick="toggleSidebar()">☰</button>
+                </div>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link"><span class="icon">🏠</span><span class="link-text">MENÚ</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/ETL" class="nav-link"><span class="icon">✅</span><span class="link-text">PROCESO
+                                ETL</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/homologacion" class="nav-link"><span class="icon">📊</span><span
+                                class="link-text">HOMOLOGACIÓN</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><span class="icon">⏳</span><span class="link-text">REPORTES
+                                BI</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><span class="icon">⚠️</span><span
+                                class="link-text">INCIDENCIAS</span></a>
+                    </li>
+                </ul>
+                <div class="user-profile" onclick="toggleProfileMenu()">
+                    <span class="profile-icon">👤</span>
+                    <p>José Lurita</p>
+                    <div class="profile-menu" id="profileMenu">
+                        <a href="#">Configuración</a>
+                        <a href="#">Cerrar Sesión</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <h2 class="text-center">PORTAL DE HOMOLOGACIÓN</h2>
+
+            <!-- Contenedor de Clasificación de Productos -->
+            <div class="container-box">
+                <h3>Clasificación de Productos</h3>
+                <p>Ejecuta el proceso de clasificación de productos:</p>
+                <div class="button-group">
+                    <button class="button-blue" onclick="clasificarProductos()">Ejecutar Clasificación</button>
+                </div>
+                <!-- Área de log -->
+                <div id="logArea" class="log-area"></div>
+            </div>
+
+            <!-- Mensaje de notificación -->
+            <div id="notification" class="notification"></div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFiles = [];
+
+        function handleFileSelection(event) {
+            selectedFiles = Array.from(event.target.files);
+            const notification = document.getElementById('notification');
+            notification.textContent = `${selectedFiles.length} archivos seleccionados`;
+            notification.classList.remove('error');
+            notification.classList.add('success');
+        }
+
+        async function uploadFiles() {
+            if (selectedFiles.length === 0) {
+                const notification = document.getElementById('notification');
+                notification.textContent = "Por favor, selecciona archivos antes de subir.";
+                notification.classList.add('error');
+                return;
+            }
+
+            const formData = new FormData();
+            selectedFiles.forEach(file => formData.append('files', file));
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const notification = document.getElementById('notification');
+                if (response.ok) {
+                    notification.textContent = "Archivos subidos exitosamente.";
+                    notification.classList.add('success');
+                } else {
+                    notification.textContent = "Error al subir archivos.";
+                    notification.classList.add('error');
+                }
+            } catch (error) {
+                const notification = document.getElementById('notification');
+                notification.textContent = `Error: ${error}`;
+                notification.classList.add('error');
+            }
+        }
+
+        // Abrir el modal de confirmación
+        function openModal() {
+            document.getElementById('confirmationModal').style.display = 'block';
+        }
+
+        // Cerrar el modal de confirmación
+        function closeModal() {
+            document.getElementById('confirmationModal').style.display = 'none';
+        }
+
+        // Confirmar la ejecución del ETL
+        async function confirmETL() {
+            closeModal();
+            document.getElementById("loadingOverlay").style.display = "flex"; // Mostrar overlay
+
+            try {
+                const response = await fetch('/confirm', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'confirm=Y'
+                });
+
+                const notification = document.getElementById('notification');
+                if (response.ok) {
+                    notification.textContent = "Proceso ETL ejecutado exitosamente.";
+                    notification.classList.add('success');
+                } else {
+                    notification.textContent = "Error en la ejecución del proceso ETL.";
+                    notification.classList.add('error');
+                }
+            } catch (error) {
+                const notification = document.getElementById('notification');
+                notification.textContent = `Error: ${error}`;
+                notification.classList.add('error');
+            } finally {
+                document.getElementById("loadingOverlay").style.display = "none"; // Ocultar overlay
+            }
+        }
+
+        function toggleProfileMenu() {
+            const menu = document.getElementById("profileMenu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        window.onclick = function (event) {
+            if (!event.target.matches('.user-profile')) {
+                const menu = document.getElementById("profileMenu");
+                if (menu && menu.style.display === "block") {
+                    menu.style.display = "none";
+                }
+            }
+        }
+
+        document.getElementById('toggleSidebar').addEventListener('click', function () {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+            var mainContent = document.querySelector('.main-content');
+            if (sidebar.classList.contains('collapsed')) {
+                mainContent.style.marginLeft = '60px';
+            } else {
+                mainContent.style.marginLeft = '250px';
+            }
+        });
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function () {
+                // Guardar el enlace activo en Local Storage
+                localStorage.setItem('activeLink', this.getAttribute('href'));
+
+                // Remover la clase 'active' de todos los enlaces
+                document.querySelectorAll('.nav-link').forEach(item => item.classList.remove('active'));
+
+                // Agregar la clase 'active' al enlace seleccionado
+                this.classList.add('active');
+            });
+        });
+        // Al cargar la página, recuperar el enlace activo desde Local Storage
+        window.addEventListener('load', () => {
+            const activeLink = localStorage.getItem('activeLink');
+            if (activeLink) {
+                // Encontrar el enlace que coincide con el valor guardado y agregarle la clase 'active'
+                const link = document.querySelector(`.nav-link[href="${activeLink}"]`);
+                if (link) {
+                    link.classList.add('active');
+                }
+            }
+        });
+
+        // Función para ejecutar la clasificación de productos
+        function clasificarProductos() {
+            // Limpiar el área de log
+            const logArea = document.getElementById('logArea');
+            logArea.textContent = '';
+
+            // Iniciar la conexión con el servidor para recibir los logs
+            const eventSource = new EventSource('/stream_logs');
+
+            eventSource.onmessage = function (event) {
+                // Agregar cada línea de log al área de log
+                logArea.textContent += event.data + '\n';
+                // Desplazar hacia abajo el log
+                logArea.scrollTop = logArea.scrollHeight;
+            };
+
+            eventSource.onerror = function (err) {
+                console.error("EventSource failed:", err);
+                eventSource.close();
+            };
+
+            // Enviar una petición para iniciar el proceso de clasificación
+            fetch('/clasificar_productos', {
+                method: 'POST'
+            }).then(response => {
+                if (!response.ok) {
+                    logArea.textContent += 'Error al iniciar la clasificación de productos.\n';
+                    eventSource.close();
+                }
+            }).catch(error => {
+                logArea.textContent += 'Error: ' + error + '\n';
+                eventSource.close();
+            });
+        }
+    </script>
+</body>
+
+</html>

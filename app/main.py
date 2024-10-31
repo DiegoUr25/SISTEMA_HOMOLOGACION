@@ -1,145 +1,24 @@
-# # from flask import Blueprint, render_template, request, redirect, url_for, flash
-# # import os
-# # import subprocess
-
-# # main = Blueprint('main', __name__)
-
-# # @main.route('/')
-# # def index():
-# #     return render_template('index.html')
-
-# # @main.route('/upload', methods=['POST'])
-# # def upload():
-# #     if 'file' not in request.files:
-# #         flash('No file part')
-# #         return redirect(request.url)
-# #     file = request.files['file']
-# #     if file.filename == '':
-# #         flash('No selected file')
-# #         return redirect(request.url)
-# #     if file:
-# #         filename = file.filename
-# #         file.save(os.path.join('input', filename))
-# #         flash('File successfully uploaded')
-# #         return redirect(url_for('main.index'))
-
-# # @main.route('/confirm', methods=['POST'])
-# # def confirm_etl():
-# #     confirmation = request.form.get('confirm')
-# #     if confirmation == 'Y':
-# #         try:
-# #             # Asegúrate de que la ruta al script es correcta y de que acepta argumentos de línea de comando
-# #             subprocess.run(['python', os.path.join('ejecutador.py'), 'Y'], check=True)
-# #             flash('ETL process executed successfully.')
-# #         except subprocess.CalledProcessError as e:
-# #             flash(f'An error occurred: {e}')
-# #     else:
-# #         flash('ETL execution canceled.')
-# #     return redirect(url_for('main.index'))
-
-
-# from flask import Blueprint, render_template, request, redirect, url_for, flash
-# import os
-# import subprocess
-# import glob
-
-# main = Blueprint('main', __name__)
-
-# @main.route('/')
-# def index():
-#     return render_template('index.html')
-
-# @main.route('/upload', methods=['POST'])
-# def upload():
-#     files = request.files.getlist('files')
-#     if not files:
-#         flash('No files selected')
-#         return redirect(request.url)
-    
-#     # Limpia la carpeta 'input' de archivos existentes con las mismas extensiones
-#     existing_files = glob.glob('input/*')
-#     for existing_file in existing_files:
-#         if existing_file.split('.')[-1] in [file.filename.split('.')[-1] for file in files]:
-#             os.remove(existing_file)
-#             flash(f'Removed existing file {os.path.basename(existing_file)}')
-
-#     # Guarda los nuevos archivos
-#     for file in files:
-#         if file and file.filename:
-#             filepath = os.path.join('input', file.filename)
-#             file.save(filepath)
-#             flash(f'File {file.filename} successfully uploaded')
-    
-#     return redirect(url_for('main.index'))
-
-# @main.route('/confirm', methods=['POST'])
-# def confirm_etl():
-#     confirmation = request.form.get('confirm')
-#     if confirmation == 'Y':
-#         try:
-#             # Asegúrate de que la ruta al script es correcta y de que acepta argumentos de línea de comando
-#             subprocess.run(['python', os.path.join('ejecutador.py'), 'Y'], check=True)
-#             flash('ETL process executed successfully.')
-#         except subprocess.CalledProcessError as e:
-#             flash(f'An error occurred: {e}')
-#     else:
-#         flash('ETL execution canceled.')
-#     return redirect(url_for('main.index'))
-
-# from flask import Blueprint, render_template, request, redirect, url_for, flash
-# import os
-# import subprocess
-
-# main = Blueprint('main', __name__)
-
-# @main.route('/')
-# def index():
-#     return render_template('index.html')
-
-# @main.route('/upload', methods=['POST'])
-# def upload():
-#     if 'file' not in request.files:
-#         flash('No file part')
-#         return redirect(request.url)
-#     file = request.files['file']
-#     if file.filename == '':
-#         flash('No selected file')
-#         return redirect(request.url)
-#     if file:
-#         filename = file.filename
-#         file.save(os.path.join('input', filename))
-#         flash('File successfully uploaded')
-#         return redirect(url_for('main.index'))
-
-# @main.route('/confirm', methods=['POST'])
-# def confirm_etl():
-#     confirmation = request.form.get('confirm')
-#     if confirmation == 'Y':
-#         try:
-#             # Asegúrate de que la ruta al script es correcta y de que acepta argumentos de línea de comando
-#             subprocess.run(['python', os.path.join('ejecutador.py'), 'Y'], check=True)
-#             flash('ETL process executed successfully.')
-#         except subprocess.CalledProcessError as e:
-#             flash(f'An error occurred: {e}')
-#     else:
-#         flash('ETL execution canceled.')
-#     return redirect(url_for('main.index'))
-
 import glob
-from flask import Blueprint, render_template, request, redirect, send_from_directory, url_for, flash
+import time
+from flask import Blueprint, Response, render_template, request, redirect,stream_with_context, url_for, flash, jsonify # type: ignore
 import os
 import subprocess
+from clasificacion import clasificar_productos
 from ejecutadores.funciones import obtener_datos_distribuidoras
 
 main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('indexTest.html')
 
 @main.route('/ETL')
 def procesoETL():
-    return render_template('ETL.html')
+    return render_template('ETLTest.html')
+
+@main.route('/homologacion')
+def procesoHomologacion():
+    return render_template('Homologacion.html')
 
 @main.route('/upload', methods=['POST'])
 def upload():
@@ -148,14 +27,12 @@ def upload():
         flash('No files selected')
         return redirect(request.url)
     
-    # Limpia la carpeta 'input' de archivos existentes con las mismas extensiones
     existing_files = glob.glob('input/*')
     for existing_file in existing_files:
         if existing_file.split('.')[-1] in [file.filename.split('.')[-1] for file in files]:
             os.remove(existing_file)
             flash(f'Removed existing file {os.path.basename(existing_file)}')
 
-    # Guarda los nuevos archivos
     for file in files:
         if file and file.filename:
             filepath = os.path.join('input', file.filename)
@@ -169,7 +46,6 @@ def confirm_etl():
     confirmation = request.form.get('confirm')
     if confirmation == 'Y':
         try:
-            # Asegúrate de que la ruta al script es correcta y de que acepta argumentos de línea de comando
             subprocess.run(['python', os.path.join('ejecutador.py'), 'Y'], check=True)
             flash('ETL process executed successfully.')
         except subprocess.CalledProcessError as e:
@@ -179,27 +55,35 @@ def confirm_etl():
     return redirect(url_for('main.procesoETL'))
 
 
-# @main.route('/download/<filename>')
-# def download_file(filename):
-#     directory = os.path.join(os.getcwd(), 'output')  # Asegúrate de que este es el directorio correcto
-#     try:
-#         return send_from_directory(directory, filename, as_attachment=True)
-#     except FileNotFoundError:
-#         flash("File not found.")
-#         return redirect(url_for('index'))
-    
 
-# @main.route('/results')
-# def show_results():
-#     directory = os.path.join(os.getcwd(), 'output')
-#     files = [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
-#     return render_template('results.html', files_available=files)
+@main.route('/clasificar_productos', methods=['POST'])
+def clasificar_productos_endpoint():
+    try:
+        result = clasificar_productos()  # Llama a la función de clasificación
+        if "error" in result:
+            flash(f"Error en la clasificación: {result['error']}")
+            return jsonify(result), 500
+        else:
+            flash(f"Clasificación completada. Accuracy: {result['accuracy']:.2f}")
+            return jsonify(result), 200
+    except Exception as e:
+        flash(f"An error occurred: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@main.route('/stream_logs')
+def stream_logs():
+    def generate():
+        yield 'data: Iniciando clasificación...\n\n'
+        # Simular logs de un proceso largo
+        for i in range(1, 11):
+            time.sleep(1)
+            yield f'data: Progreso {i * 10}%\n\n'
+        yield 'data: Clasificación completada.\n\n'
+    return Response(stream_with_context(generate()), mimetype='text/event-stream')
 
 
 @main.route('/distribuidoras')
 def mostrar_distribuidoras():
-    # Obtenemos los datos desde la base de datos
     distribuidoras = obtener_datos_distribuidoras()
     
-    # Renderizamos el template y pasamos los datos a la tabla
     return render_template('distribuidoras.html', distribuidoras=distribuidoras)
